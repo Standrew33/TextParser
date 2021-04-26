@@ -1,0 +1,16 @@
+E:\Projects\C#\TextParser\TextParser\bin\Debug\net5.0\TextParser.exe
+E:\Projects\C#\TextParser\TextParser\bin\Debug\net5.0\TextParser.deps.json
+E:\Projects\C#\TextParser\TextParser\bin\Debug\net5.0\TextParser.runtimeconfig.json
+E:\Projects\C#\TextParser\TextParser\bin\Debug\net5.0\TextParser.runtimeconfig.dev.json
+E:\Projects\C#\TextParser\TextParser\bin\Debug\net5.0\TextParser.dll
+E:\Projects\C#\TextParser\TextParser\bin\Debug\net5.0\ref\TextParser.dll
+E:\Projects\C#\TextParser\TextParser\bin\Debug\net5.0\TextParser.pdb
+E:\Projects\C#\TextParser\TextParser\obj\Debug\net5.0\TextParser.csprojAssemblyReference.cache
+E:\Projects\C#\TextParser\TextParser\obj\Debug\net5.0\TextParser.GeneratedMSBuildEditorConfig.editorconfig
+E:\Projects\C#\TextParser\TextParser\obj\Debug\net5.0\TextParser.AssemblyInfoInputs.cache
+E:\Projects\C#\TextParser\TextParser\obj\Debug\net5.0\TextParser.AssemblyInfo.cs
+E:\Projects\C#\TextParser\TextParser\obj\Debug\net5.0\TextParser.csproj.CoreCompileInputs.cache
+E:\Projects\C#\TextParser\TextParser\obj\Debug\net5.0\TextParser.dll
+E:\Projects\C#\TextParser\TextParser\obj\Debug\net5.0\ref\TextParser.dll
+E:\Projects\C#\TextParser\TextParser\obj\Debug\net5.0\TextParser.pdb
+E:\Projects\C#\TextParser\TextParser\obj\Debug\net5.0\TextParser.genruntimeconfig.cache
