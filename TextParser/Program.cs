@@ -27,7 +27,7 @@ namespace TextParser
             //Top 5 neighbors
             List<AdjacenWords> adjacenWords = GetAdjacenWords(allWords, uniqueWords);
 
-            Console.WriteLine("Total unique words: " + allWords.Distinct().Count());
+            Console.WriteLine("Total unique words: " + allWords.Distinct(StringComparer.CurrentCultureIgnoreCase).Count());
             Console.WriteLine();
 
             Console.WriteLine("Top 20 unique words");
@@ -48,40 +48,38 @@ namespace TextParser
 
         private static List<UniqueWords> GetUniqueWords(List<string> words)
         {
-            return words.GroupBy(x => x, StringComparer.InvariantCultureIgnoreCase)
-                .Select(x => new UniqueWords { Word = x.Key, Frequency = x.Count() })
-                .OrderByDescending(x => x.Frequency)
-                .ThenBy(x => x.Word).Take(20).ToList();
+            return words.GroupBy(x => x, StringComparer.InvariantCultureIgnoreCase)     //---Grouping the same words case insensitive
+                .Select(x => new UniqueWords { Word = x.Key, Frequency = x.Count() })   //---Selection of grouped words and their number
+                .OrderByDescending(x => x.Frequency)                                    //---Reverse sorting by frequency
+                .ThenBy(x => x.Word).Take(20).ToList();                                 //---Sorting further alphabetically (for same word frequency) and taking the first 20 words
         }
 
         private static List<AdjacenWords> GetAdjacenWords(List<string> words, List<UniqueWords> uniqueWords)
         {
             List<AdjacenWords> adjacenWords = new List<AdjacenWords>();
-            var wordWNeighbor = words.Select((x, idx) => new { Word = x, Index = idx })
-                .Where(x => uniqueWords.Any(y => y.Word.ToLower() == x.Word.ToLower()))
-                .Join(uniqueWords, u => u.Word, w => w.Word, (u, w) => new { u.Word, u.Index, Frequency = w.Frequency })
-                .Select(x => new { Word = x.Word, Frequency = x.Frequency, Neighbors = new[] { 
+            var wordWNeighbor = words.Select((x, idx) => new { Word = x, Index = idx })                     //---Sample all words to get each index
+                .Where(x => uniqueWords.Any(y => y.Word.ToLower() == x.Word.ToLower()))                     //---Filter only words from Top 20
+                .Join(uniqueWords, u => u.Word, w => w.Word,                                                //---Link words from a unique list for further sorting by frequency
+                    (u, w) => new { u.Word, u.Index, Frequency = w.Frequency })
+                .Select(x => new { Word = x.Word, Frequency = x.Frequency, Neighbors = new[] {              //---Get neighbors by indices for each word
                     x.Index != 0 ? words[x.Index - 1] : null, 
                     x.Index < words.Count - 1 ? words[x.Index + 1] : null } 
                 })
-                .OrderByDescending(x => x.Frequency)
-                .ThenBy(x => x.Word)
-                .GroupBy(x => x.Word, StringComparer.InvariantCultureIgnoreCase)
-                .Select(x => new { x.Key, Neighbor = x.Count() > 1 ? 
-                    x.ElementAt(0).Neighbors.Concat(x.ElementAt(1).Neighbors).ToList() : 
-                    x.ElementAt(0).Neighbors.ToList() 
-                }).ToList();
+                .OrderByDescending(x => x.Frequency)                                                        //---Sort by frequency
+                .ThenBy(x => x.Word)                                                                        //---Sorting further alphabetically (for same word frequency)
+                .GroupBy(x => x.Word, StringComparer.InvariantCultureIgnoreCase)                            //---Grouping by the same words
+                .Select(x => new { x.Key, Neighbor = x.SelectMany(x => x.Neighbors).ToList()}).ToList();    //---Combining all neighbors for a word
 
-            foreach (var testword in wordWNeighbor)
+            foreach (var word in wordWNeighbor)
             {
                 AdjacenWords adWords = new AdjacenWords() {
-                    Word = testword.Key,
-                    Neighbors = testword.Neighbor
-                        .Where(x => x != null)
-                        .GroupBy(x => x, StringComparer.InvariantCultureIgnoreCase)
-                        .Select(x => new Neighbor { Word = x.Key, Frequency = x.Count() })
-                        .OrderByDescending(x => x.Frequency)
-                        .ThenBy(x => x.Word).Take(5).ToList()
+                    Word = word.Key,
+                    Neighbors = word.Neighbor
+                        .Where(x => x != null)                                                  //---Filter empty neighbors if words were extreme
+                        .GroupBy(x => x, StringComparer.InvariantCultureIgnoreCase)             //---Grouping the same neighbors
+                        .Select(x => new Neighbor { Word = x.Key, Frequency = x.Count() })      //---Selection of grouped neighbors and their number
+                        .OrderByDescending(x => x.Frequency)                                    //---Reverse sorting by frequency
+                        .ThenBy(x => x.Word).Take(5).ToList()                                   //---Sorting further alphabetically (for same word frequency) and taking the first 5 words
                 };
                 adjacenWords.Add(adWords);
             }
